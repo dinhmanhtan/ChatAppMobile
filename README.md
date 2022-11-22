@@ -19,10 +19,11 @@ https://stackoverflow.com/questions/73451029/flutter-firebase-auth-very-slow
 # Run
 #### npm install
 #### npm start
+or
+#### npx expo start
 
 # Note
 Sau khi đăng nhập lần đầu tiên, cần logout ra luôn (xóa local cache lưu lại từ máy push code) : bấm vào avatar để truy cập đến profile sau đó logout ở cuối trang.
 Sau khi đăng nhập lại cần reload app
 
-or
-#### npx expo start
+
