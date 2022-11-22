@@ -1,0 +1,46 @@
+type Location {
+  latitude: Float
+  longitude: Float
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+}
+
+type ChatRoom @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  newMessages: Int
+  imageUri: String
+  name: String
+  Users: [User] @manyToMany(relationName: "ChatRoomUser")
+  Messages: [Message] @hasMany(indexName: "byChatRoom", fields: ["id"])
+  LastMessage: Message @hasOne
+  Admin: User @hasOne
+  isGroup: Boolean
+}
+
+type Message @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  content: String
+  image: String
+  audio: String
+  replyToMessageID: ID
+  userID: ID! @index(name: "byUser")
+  chatroomID: ID! @index(name: "byChatRoom")
+  status: MessageStatus
+  document: String
+  location: Location
+}
+
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  name: String
+  imageUri: String
+  status: String
+  lastOnlineAt: AWSTimestamp
+  ChatRooms: [ChatRoom] @manyToMany(relationName: "ChatRoomUser")
+  Messages: [Message] @hasMany(indexName: "byUser", fields: ["id"])
+}
+ 
