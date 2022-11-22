@@ -13,13 +13,13 @@ import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = () => {
-  // const logOut = async () => {
-  //   await DataStore.clear();
-  //   Auth.signOut();
-  // };
-  const logOut = () => {
+  const logOut = async () => {
+    await DataStore.clear();
     Auth.signOut();
   };
+  // const logOut = () => {
+  //   Auth.signOut();
+  // };
   const navigation = useNavigation();
 
   return (
