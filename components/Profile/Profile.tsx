@@ -1,11 +1,12 @@
-import React from "react";
-import { View, SafeAreaView, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, SafeAreaView, StyleSheet, ScrollView } from "react-native";
 import {
   Avatar,
   Title,
   Caption,
   Text,
   TouchableRipple,
+  ActivityIndicator,
 } from "react-native-paper";
 import { Auth, DataStore } from "aws-amplify";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -13,17 +14,29 @@ import { Entypo, Ionicons, FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
 const ProfileScreen = () => {
+  const [authUser, setAuthtUser] = useState(null);
   const logOut = async () => {
     await DataStore.clear();
     Auth.signOut();
   };
+  useEffect(() => {
+    const fetchUser = async () => {
+      const authUser = await Auth.currentAuthenticatedUser();
+      setAuthtUser(authUser);
+      console.log(authUser);
+    };
+    fetchUser();
+  }, []);
   // const logOut = () => {
   //   Auth.signOut();
   // };
   const navigation = useNavigation();
+  if (!authUser) {
+    return <ActivityIndicator />;
+  }
 
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.userInfoSection}>
         <View style={{ flexDirection: "row", marginTop: 15 }}>
           <Avatar.Image
@@ -42,9 +55,9 @@ const ProfileScreen = () => {
                 },
               ]}
             >
-              John Doe
+              {authUser.username}
             </Title>
-            <Caption style={styles.caption}>@j_doe</Caption>
+            {/* <Caption style={styles.caption}>@j_doe</Caption> */}
           </View>
         </View>
       </View>
@@ -59,13 +72,13 @@ const ProfileScreen = () => {
         <View style={styles.row}>
           <Icon name="phone" color="#777777" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
-            +91-900000009
+            {authUser.attributes.phone_number}
           </Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
-            john_doe@email.com
+            {authUser.attributes.email}
           </Text>
         </View>
       </View>
@@ -110,12 +123,7 @@ const ProfileScreen = () => {
             <Text style={styles.menuItemText}>Payment</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
-          <View style={styles.menuItem}>
-            <Icon name="share-outline" color="black" size={25} />
-            <Text style={styles.menuItemText}>Tell Your Friends</Text>
-          </View>
-        </TouchableRipple>
+
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="account-check-outline" color="black" size={25} />
@@ -136,7 +144,7 @@ const ProfileScreen = () => {
           </View>
         </TouchableRipple>
       </View>
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 

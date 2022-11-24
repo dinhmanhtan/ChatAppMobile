@@ -85,8 +85,8 @@ export default function UsersScreen() {
         const index = chatRoom2s.indexOf(chatRoom1s[i]);
 
         if (index > -1) {
-          console.log("yes", chatRoom1s[i]);
-          console.log("user[0]", users[0]);
+          // console.log("yes", chatRoom1s[i]);
+          // console.log("user[0]", users[0]);
           navigation1.navigate("ChatRoom", { id: chatRoom1s[i] });
           return;
         }
@@ -105,7 +105,7 @@ export default function UsersScreen() {
       isGroup: false,
     };
 
-    if (users.length > 1) {
+    if (isNewGroup) {
       newChatRoomData.name = "New group";
       newChatRoomData.imageUri =
         "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/group.jpeg";

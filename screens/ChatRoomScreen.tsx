@@ -55,6 +55,8 @@ export default function ChatRoomScreen({ navigation }) {
   useEffect(() => {
     const subscription = DataStore.observe(MessageModel).subscribe((msg) => {
       // console.log(msg.model, msg.opType, msg.element);
+      // console.log(msg);
+
       if (msg.model === MessageModel && msg.opType === "INSERT") {
         setMessages((existingMessage) => [...existingMessage, msg.element]);
         if (msg.element.image) {
@@ -192,7 +194,7 @@ export default function ChatRoomScreen({ navigation }) {
 
         // get URL if message is image
       }
-      console.log(arr);
+      // console.log(arr);
       setContainer(arr);
     }
   }, [messages, otherUsers]);

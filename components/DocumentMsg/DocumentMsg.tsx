@@ -39,7 +39,7 @@ const DocumentMsg = ({ documentURI }) => {
     <Pressable style={styles.Container} onPress={handlePress}>
       <Image
         source={{
-          uri: "https://auth7074d48482fa400bb2388f6e074c33a7105513-staging.s3.ap-southeast-1.amazonaws.com/public/file_icon.png",
+          uri: "https://auth7074d48482fa400bb2388f6e074c33a7105513-staging.s3.ap-southeast-1.amazonaws.com/public/document-icon.jpg",
         }}
         style={{ width: 60, height: 60, borderRadius: 10 }}
       />

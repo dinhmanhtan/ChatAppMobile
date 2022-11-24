@@ -42,19 +42,29 @@ export default function LocationScreen({ route }) {
       longitude: mapRegion.longitude,
     });
     const navigateToChatroom = (user) => {
-      navigation.navigate("ChatRoom", { id: route.params.chatroomID });
+      console.log(route.params.chatRoom.id);
+      navigation.navigate("ChatRoom", { id: route.params.chatRoom.id });
     };
     const user = await Auth.currentAuthenticatedUser();
+
+    const updateLastMessage = async (newMessage) => {
+      console.log(route.params.chatRoom);
+      DataStore.save(
+        ChatRoom.copyOf(route.params.chatRoom, (updatedChatRoom) => {
+          updatedChatRoom.LastMessage = newMessage;
+        })
+      ).then(navigateToChatroom);
+    };
 
     const newMessage = await DataStore.save(
       new Message({
         userID: user.attributes.sub,
-        chatroomID: route.params.chatroomID,
+        chatroomID: route.params.chatRoom.id,
         replyToMessageID: route.params.replyToMessageID,
         location,
         status: "SENT",
       })
-    ).then(navigateToChatroom);
+    ).then(updateLastMessage);
   };
 
   return (

@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
+  Text,
 } from "react-native";
 import {
   SimpleLineIcons,
@@ -292,7 +293,7 @@ const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
           }}
         >
           <View style={{ flex: 1 }}>
-            {/* <Text>Reply to:</Text> */}
+            <Text>Reply to:</Text>
             <MessageComponent message={messageReplyTo} />
           </View>
           <Pressable onPress={() => removeMessageReplyTo()}>
@@ -306,16 +307,19 @@ const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
         </View>
       )}
 
-      {(image || documentURI) && (
+      {(image || documentURI || soundURI) && (
         <View style={styles.sendImageContainer}>
-          <Image
-            source={{
-              uri: image
-                ? image
-                : "https://auth7074d48482fa400bb2388f6e074c33a7105513-staging.s3.ap-southeast-1.amazonaws.com/public/document.png?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEO%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaDmFwLXNvdXRoZWFzdC0xIkcwRQIgbWHQ6GuhW5%2BYhFML9YLboHqcJE29IT9Hrg%2Blz4hqi4ICIQDzpCIHOB8M%2FEA%2Bb5cq6BgMxezdYKqEQll%2F8YgN364E8CrtAgjo%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F8BEAAaDDU0Mjk3MjA1NTc0MyIMB%2FjREqZsdvZRyS33KsECRmbagdWoj3rR05NTyIi%2FqSFTp99fsZ9vJTIpztPMX3a417U52vO%2FDEwyvL%2FxaOq3UAhVJS%2FlvECj4RLghGF6%2F3LK9ih%2BRHuEfMLdlKo95DgdoBn8UPGiexkGf%2FaAOWUX0qNAxMZ1xvvKF1LOpwLUUzvZYVvrKZqwF2%2BXc37JlLOdBa8hAVtelk1ojradNxuQ8c2L%2BFOWy%2FKlca43mgZ9%2Bt%2Bx8uVn0wrSbhlOzmSG9xI%2FgDSqXolcfTpN9qS%2FmYaB5kVrVMGHNUi6vznjBZVAmQoWCTuvVJANHe0rbpSnv%2BCSj4VDgaBGD%2FPaCXWhOf4XpgP499Sjyqv%2BdWTh0q0dH1jNucR6c9a%2FEU30syBcJTYbg%2BCmQ1VVp9pRbftFSBrhGrRykNDMpz55pm1MIU6DogKu9E6gn9D5MbfJa55qtSFLMPXxy5sGOrMC4%2BfLO1gxznka8d9122ZbTfdViKndcc80LzwBESQ3mPpWkwLkJchAH13T6jWkseNc4ZZ6NTyXHff1x2vAzNhVIw6zgyCGrS8bpqLDDUD6O51MprBq7%2BrY17XN13BA7R5sixKEXj3KEZwq5hgqHU6z%2Fw9hTMI803eVhdN%2Bg6C0UKyYC63EhRBzcHk8s4WFmFvF9sj78b4MA97cAhDRLibrHMHkuHl9k%2BQLhkPFVjrBoi6XWxoMHO0j4gUdDrfMx3bXeMN75OSRoF516lE3hfXhBDH8%2BydlllJuf4QoKL0%2FpRHKKA%2BZfI7%2F51V8t1sZPzg6puIHzWSCNNl4JMuxiTKOe4ENgjpd9M2fEUQ1RGhE1tWhFUHY%2FG0ezyslwbF7AEmstMmhsMdLDbn50rSjdae1Z5M0fA%3D%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20221115T092642Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAX425ICC7WVVIR23N%2F20221115%2Fap-southeast-1%2Fs3%2Faws4_request&X-Amz-Signature=386f26ea51fdbf21a3a8842b0784e9161442d40495d771fc5a8f40e3a1911410",
-            }}
-            style={{ width: 100, height: 100, borderRadius: 10 }}
-          />
+          {(image || documentURI) && (
+            <Image
+              source={{
+                uri: image
+                  ? image
+                  : "https://auth7074d48482fa400bb2388f6e074c33a7105513-staging.s3.ap-southeast-1.amazonaws.com/public/document-icon.jpg",
+              }}
+              style={{ width: 100, height: 100, borderRadius: 10 }}
+            />
+          )}
+          {soundURI && <AudioPlayer soundURI={soundURI} />}
 
           <View
             style={{
@@ -338,6 +342,7 @@ const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
             onPress={() => {
               setImage(null);
               setDocumentURI(null);
+              setSoundURI(null);
             }}
           >
             <AntDesign
@@ -349,6 +354,7 @@ const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
           </Pressable>
         </View>
       )}
+      {/* {soundURI && <AudioPlayer soundURI={soundURI} />} */}
 
       {isEmojiPickerOpen && (
         <EmojiModal
@@ -359,7 +365,6 @@ const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
           emojiSize={30}
         />
       )}
-      {soundURI && <AudioPlayer soundURI={soundURI} />}
 
       <View style={styles.row}>
         <View style={styles.inputContainer}>
@@ -386,7 +391,7 @@ const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
           <Pressable
             onPress={() =>
               navigation.navigate("LocationScreen", {
-                chatroomID: chatRoom.id,
+                chatRoom: chatRoom,
                 replyToMessageID: messageReplyTo?.id,
               })
             }
