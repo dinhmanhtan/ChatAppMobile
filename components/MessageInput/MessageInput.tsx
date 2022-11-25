@@ -83,6 +83,7 @@ const MessageInput = ({ chatRoom, messageReplyTo, removeMessageReplyTo }) => {
   };
 
   const updateLastMessage = async (newMessage) => {
+    console.log(newMessage);
     DataStore.save(
       ChatRoom.copyOf(chatRoom, (updatedChatRoom) => {
         updatedChatRoom.LastMessage = newMessage;

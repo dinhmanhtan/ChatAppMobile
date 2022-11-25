@@ -23,7 +23,7 @@ const ProfileScreen = () => {
     const fetchUser = async () => {
       const authUser = await Auth.currentAuthenticatedUser();
       setAuthtUser(authUser);
-      console.log(authUser);
+      // console.log(authUser);
     };
     fetchUser();
   }, []);
@@ -65,9 +65,7 @@ const ProfileScreen = () => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Icon name="map-marker-radius" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            Kolkata, India
-          </Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>Ha Noi</Text>
         </View>
         <View style={styles.row}>
           <Icon name="phone" color="#777777" size={20} />

@@ -92,7 +92,7 @@ function App() {
   useEffect(() => {
     const interval = setInterval(async () => {
       await updateLastOnline();
-    }, 30000 * 1000);
+    }, 40000 * 1000);
     return () => clearInterval(interval);
   }, [user]);
 

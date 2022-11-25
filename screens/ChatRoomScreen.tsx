@@ -18,6 +18,8 @@ import {
 import Message from "../components/Message";
 import MessageInput from "../components/MessageInput";
 import { SortDirection, Auth, Storage } from "aws-amplify";
+import { Modal } from "react-native-paper";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function ChatRoomScreen({ navigation }) {
   const [messages, setMessages] = useState<MessageModel[]>([]);
@@ -128,6 +130,7 @@ export default function ChatRoomScreen({ navigation }) {
   useEffect(() => {
     if (messages.length > 0 && userDB && otherUsers.length > 0) {
       let arr = [];
+      let arr1 = [];
       var item;
       let first = true;
       var userTemp = null;
@@ -147,6 +150,7 @@ export default function ChatRoomScreen({ navigation }) {
           for (let j = 0; j < otherUsers.length; j++) {
             if (messages[i].userID == otherUsers[j].id) {
               index = j;
+
               break;
             }
           }
@@ -168,16 +172,7 @@ export default function ChatRoomScreen({ navigation }) {
             item["user"] = userTemp;
           }
         }
-        // else {
-        //   item = {
-        //     item: messages[i],
-        //     firstInChain: false,
-        //     user: null,
-        //     firstInMessages: false,
-        //     isMe: false,
-        //     indexOfImages: messages[i].image ? indexOfImages : null,
-        //   };
-        // }
+
         // message and other attribute for  non-group chat
 
         if (
@@ -190,12 +185,14 @@ export default function ChatRoomScreen({ navigation }) {
         }
         if (userDB.attributes.sub == messages[i].userID) item["isMe"] = true;
         if (messages[i].image) indexOfImages += 1;
-        arr[i] = item;
 
         // get URL if message is image
+        arr[messages.length - 1 - i] = item;
+        arr1[i] = item;
       }
       // console.log(arr);
-      setContainer(arr);
+
+      setContainer(arr1);
     }
   }, [messages, otherUsers]);
 
@@ -219,7 +216,23 @@ export default function ChatRoomScreen({ navigation }) {
             images={urlImageMessages}
           />
         )}
+        // inverted
       />
+      <Modal
+        visible={false}
+        style={{
+          backgroundColor: "red",
+          height: 150,
+
+          display: "flex",
+          flexDirection: "row",
+        }}
+      >
+        <AntDesign name="like2" size={24} color="black" />
+        <AntDesign name="like2" size={24} color="black" />
+        <AntDesign name="like2" size={24} color="black" />
+        <AntDesign name="like2" size={24} color="black" />
+      </Modal>
       <MessageInput
         chatRoom={chatRoom}
         messageReplyTo={messageReplyTo}

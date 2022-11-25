@@ -3,7 +3,7 @@ import { Audio, AVPlaybackStatus } from "expo-av";
 import React, { useEffect, useState } from "react";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
-const AudioPlayer = ({ soundURI }) => {
+const AudioPlayer = ({ soundURI, width }) => {
   const [sound, setSound] = useState<Audio.Sound | null>(null);
   const [paused, setPause] = useState(true);
   const [audioProgress, setAudioProgress] = useState(0);

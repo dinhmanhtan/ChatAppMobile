@@ -12,7 +12,7 @@ import { WebView } from "react-native-webview";
 import { Storage } from "aws-amplify";
 import { View } from "../Themed";
 
-const DocumentMsg = ({ documentURI }) => {
+const DocumentMsg = ({ documentURI, onLongPress }) => {
   const [url, setUrl] = useState<String>("");
   const [type, setType] = useState<String>("");
   const [read, setRead] = useState<Boolean>(false);
@@ -36,7 +36,11 @@ const DocumentMsg = ({ documentURI }) => {
   }, [url]);
 
   return (
-    <Pressable style={styles.Container} onPress={handlePress}>
+    <Pressable
+      style={styles.Container}
+      onPress={handlePress}
+      onLongPress={onLongPress}
+    >
       <Image
         source={{
           uri: "https://auth7074d48482fa400bb2388f6e074c33a7105513-staging.s3.ap-southeast-1.amazonaws.com/public/document-icon.jpg",
@@ -56,8 +60,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     // alignItems: "center",
     alignSelf: "stretch",
-    borderWidth: 1,
-    borderColor: "lightgray",
+    // borderWidth: 1,
+    // borderColor: "lightgray",
     borderRadius: 10,
   },
   filename: {

@@ -22,8 +22,9 @@ import { Avatar } from "react-native-paper";
 import ImageView from "react-native-image-viewing";
 import { useNavigation } from "@react-navigation/core";
 
-const blue = "#3777f0";
-const grey = "lightgrey";
+const blue = "#3265b8";
+
+const grey = "#d3d7e2c4";
 
 const Message = (props) => {
   const {
@@ -44,6 +45,7 @@ const Message = (props) => {
   const [repliedTo, setRepliedTo] = useState<MessageModel | undefined>(
     undefined
   );
+  const [urlToMap, setUrlToMap] = useState<any>(null);
 
   const [user, setUser] = useState<User | undefined>();
   // const [isMe, setIsMe] = useState<boolean | null>(null);
@@ -89,6 +91,15 @@ const Message = (props) => {
     } else if (message.document) {
       //Storage.get(message.document).then(setDocumentURI);
       setDocumentURI(message.document);
+    } else if (message.location) {
+      const location = message.location
+        ? `${message.location.latitude},${message.location.longitude}`
+        : null;
+      const url = Platform.select({
+        ios: `maps:${location}`,
+        android: `geo:${location}?center=${location}&q=${location}&z=16`,
+      });
+      setUrlToMap(url);
     }
   }, [message]);
 
@@ -113,13 +124,6 @@ const Message = (props) => {
       );
     }
   };
-  const location = message.location
-    ? `${message.location.latitude},${message.location.longitude}`
-    : null;
-  const url = Platform.select({
-    ios: `maps:${location}`,
-    android: `geo:${location}?center=${location}&q=${location}&z=16`,
-  });
 
   if (!user) {
     return <ActivityIndicator />;
@@ -150,7 +154,6 @@ const Message = (props) => {
         </View>
       )}
       <Pressable
-        onLongPress={setAsMessageReply}
         style={[
           styles.container,
           isMe ? styles.rightContainer : styles.leftContainer,
@@ -160,13 +163,17 @@ const Message = (props) => {
             padding: message.image ? 0 : 10,
           },
         ]}
+        onLongPress={setAsMessageReply}
       >
-        {repliedTo && <MessageReply message={repliedTo} />}
+        {message?.replyToMessageID && repliedTo && (
+          <MessageReply message={repliedTo} nameUser={user.name} />
+        )}
         <View style={styles.row}>
           {message.image && (
             <Pressable
               style={{ marginBottom: message.content ? 10 : 0 }}
               onPress={() => setIsVisible(true)}
+              onLongPress={setAsMessageReply}
             >
               <S3Image
                 imgKey={message.image}
@@ -186,7 +193,10 @@ const Message = (props) => {
                 margin: 5,
                 flexDirection: "column",
               }}
-              onPress={() => Linking.openURL(url)}
+              onPress={() => Linking.openURL(urlToMap)}
+              onLongPress={() => {
+                setAsMessageReply();
+              }}
             >
               <Ionicons
                 name="ios-location"
@@ -200,19 +210,24 @@ const Message = (props) => {
                   borderRadius: 10,
                 }}
               />
-              <Text style={{ color: isMe ? "black" : "white" }}>
+              <Text style={{ color: isMe ? "white" : "black" }}>
                 Click to View Location
               </Text>
             </Pressable>
           )}
           {soundURI && <AudioPlayer soundURI={soundURI} />}
-          {documentURI && <DocumentMsg documentURI={documentURI} />}
+          {documentURI && (
+            <DocumentMsg
+              documentURI={documentURI}
+              onLongPress={setAsMessageReply}
+            />
+          )}
           {!!message.content && (
-            <Text style={{ color: isMe ? "black" : "white" }}>
+            <Text style={{ color: isMe ? "white" : "black" }}>
               {message.content}
             </Text>
           )}
-
+          {/* 
           {isMe &&
             !!message.status &&
             message.status !== "SENT" &&
@@ -227,7 +242,7 @@ const Message = (props) => {
                 color="gray"
                 style={{ marginHorizontal: 5 }}
               />
-            )}
+            )} */}
         </View>
       </Pressable>
     </View>
@@ -249,7 +264,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   leftContainer: {
-    backgroundColor: blue,
+    backgroundColor: grey,
     marginLeft: 25,
     marginRight: "auto",
     alignItems: "flex-end",
@@ -260,7 +275,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   rightContainer: {
-    backgroundColor: grey,
+    backgroundColor: blue,
     marginLeft: "auto",
     marginRight: 10,
   },
